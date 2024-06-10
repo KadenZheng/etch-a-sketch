@@ -22,18 +22,22 @@ document.addEventListener("DOMContentLoaded", () => {
         let squares = document.querySelectorAll(".square");
         squares.forEach((square) => {
             let state = 0;
+            let opacity = 1;
 
             square.addEventListener("mouseenter", () => {
                 state = 0;
                 var randomColor = "#" + ((Math.random() * 0xffffff) << 0).toString(16).padStart(6, "0");
                 square.style.backgroundColor = randomColor;
+                square.style.opacity = opacity;
             });
 
             square.addEventListener("mouseleave", () => {
                 if (state === 0) {
                     square.style.backgroundColor = "black";
                     square.style.transition = "background-color 0.5s ease-out";
+                    opacity = opacity -= 0.1;
                 } else {
+                    opacity = 1;
                     return;
                 }
             });
@@ -41,6 +45,12 @@ document.addEventListener("DOMContentLoaded", () => {
             square.addEventListener("click", () => {
                 state = 1;
                 square.style.backgroundColor = "white";
+                // For if the background color is black and you want to use click to revive the square
+                // square.style.opacity = 1;
+            });
+
+            square.addEventListener("hover", () => {
+                square.style.outline = "1px solid red";
             });
         });
     };
@@ -54,6 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", () => {
         container.replaceChildren();
         let numberOfSquares = prompt("What size grid would you like?");
+        if (numberOfSquares > 100 || numberOfSquares <= 0) {
+            numberofSquares = prompt("Grid size cannot be negative or over 100. What size grid would you like?");
+        }
         let size = 100 / numberOfSquares; // Calculate the size of each square
         generateSquares(numberOfSquares ** 2, size);
         logic();
